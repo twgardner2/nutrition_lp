@@ -3,8 +3,9 @@ library(readxl)
 library(lpSolve)
 
 
-df <- readxl::read_excel('data/nutrition_lp.xlsx')
+# df <- readxl::read_excel('data/nutrition_lp.xlsx')
 df <- readr::read_csv('data/nutrition_lp.csv')
+# df <- read.csv('data/nutrition_lp.csv')
 # dput(df)
 
 parseInput  <- function(data) {
@@ -30,7 +31,8 @@ parseInput  <- function(data) {
   f.con <- rbind(f.con, max.cons)
   f.rhs <- c(f.rhs, maxes)
   f.dir <- c(f.dir, rep('<=', length(mins)))
-  # browser()
+
+  
   for(col in names(data)[-(1:5)]) {
     
     for(row in c(1,3)) {
@@ -58,7 +60,7 @@ parseInput  <- function(data) {
 
 f.obj <- as.numeric(df$calories[-(1:4)])
 
-parsedInput <- parseInput(df, c('calories', 'total_fat', 'total_carb', 'protein', 'sodium', 'total_fiber'))
+
 parsedInput <- parseInput(df)
 
 
@@ -73,3 +75,15 @@ results <-lp(
 
 results$solution
 
+
+
+displaySolution <- function(df, results) {
+  items <- df$item[-(1:4)]
+  output <- ''
+  
+  for (i in 1:length(items)) {
+    print(glue::glue('{items[i]}: {results$solution[i]}\n'))
+  }
+  
+}
+displaySolution(df, results)
