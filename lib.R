@@ -47,6 +47,28 @@ parseInput  <- function(data) {
   return(list(f.con=f.con, f.rhs=f.rhs, f.dir=f.dir, int.vec=int.vec))
 }
 
+ok.comma <- function(FUN) {
+  function(...) {
+    arg.list <- as.list(sys.call())[-1L]
+    len <- length(arg.list)
+    if (len > 1L) {
+      last <- arg.list[[len]]
+      if (missing(last)) {
+        arg.list <- arg.list[-len]
+      }
+    }
+    do.call(FUN, arg.list)
+  }
+}
+
+getNutrTotal <- function(col, input, amounts) {
+  input <- input[-(1:4),-(1:5)]
+  coeff <- input[[col]]
+  coeff[is.na(coeff)] <- 0
+  # browser(expr={col=='potassium'})
+  return(sum(as.double(coeff)*amounts))
+}
+
 initialDf <- structure(list(item = c("constraint1", "direction1", "constraint2", 
                         "direction2", "Grape Nuts", "Kind Breakfast Protein Bars - Dark Chocolate Cocoa", 
                         "Protein Shake", "Chipolte Chicken", "Chili", "Egg", "Dahi", 

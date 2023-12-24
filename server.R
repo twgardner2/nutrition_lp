@@ -1,6 +1,13 @@
 server <- function(input, output, session) {
   
-  rv <- reactiveValues(data = initialDf, orig=NULL, lpSolution=NULL, outputDf=NULL)
+  # Reactive Values ------------------------------------------------------------
+  rv <- ok.comma(reactiveValues)(
+    data = initialDf,
+    orig=NULL,
+    lpSolution=NULL,
+    solutionDf=NULL,
+    solutionNutrDf=NULL,
+    )
   
   observeEvent(input$file1, {
     file <- input$file1
@@ -30,15 +37,51 @@ server <- function(input, output, session) {
     }
   })
   
+  # Inputs datatable -----------------------------------------------------------
   output$tableInputs <- renderDT({
-    datatable(rv$data, editable=TRUE)
+  
+    capAndRemoveUnderscore <- function(x) {
+      x %>% str_replace_all("_", " ")  %>% str_to_title()
+    }
+    
+    colnames <- names(rv$data)
+    names(colnames) <- capAndRemoveUnderscore(colnames)
+    
+    # datatable(rv$data, editable=TRUE, colnames=colnames, rownames=FALSE)
+    datatable(rv$data, editable=TRUE, colnames=colnames)
   })
   
+  # Solution datatable -----------------------------------------------------------
   output$tableSolution <- renderDT({
-    #@if(rv$outputDf) {
-      
-      datatable(rv$outputDf, editable=FALSE, options=list(paging=FALSE))
-    #}
+    
+    if( !is.null(rv$solutionDf) ) {
+      df <- rv$solutionDf %>% filter(servings>0)
+      # datatable(df, editable=FALSE, rownames=FALSE, options=list(paging=FALSE))
+      datatable(
+        df,
+        editable=FALSE, 
+        options=ok.comma(list)(
+          paging=FALSE,
+          autoWidth=TRUE,
+          )
+        )
+    }
+  })
+  # Solution Nutrition datatable -----------------------------------------------
+  output$tableSolutionNutrition <- renderDT({
+    
+    if( !is.null(rv$solutionNutrDf) ) {
+      df <- rv$solutionNutrDf
+      # datatable(df, editable=FALSE, rownames=FALSE, options=list(paging=FALSE))
+      datatable(
+        df,
+        editable=FALSE, 
+        options=ok.comma(list)(
+          paging=FALSE,
+          autoWidth=TRUE,
+          )
+        )
+    }
   })
   
   observeEvent(input$replacevalues, {
@@ -49,16 +92,21 @@ server <- function(input, output, session) {
     rv$data <- removecolumn(rv$data,input$selectcolumn)
   })
   
+  # Undo -----------------------------------------------------------------------
   observeEvent(input$Undo, {
     rv$data <- rv$orig
   })
   
+  # Cell edit ------------------------------------------------------------------
   observeEvent(input$tableInputs_cell_edit, {
     row <- input$tableInputs_cell_edit$row
     col <- input$tableInputs_cell_edit$col
+    print(glue::glue('row: {row}, col: {col}, value: {input$tableInputs_cell_edit$value}'))
+    
     rv$data[row,col] <- input$tableInputs_cell_edit$value
   })
   
+  # Run LP ---------------------------------------------------------------------
   observeEvent(input$runLp, {
     
     f.obj <- as.numeric(rv$data$calories[-(1:4)])
@@ -77,10 +125,15 @@ server <- function(input, output, session) {
     
     rv$lpSolution <- results
     
-    rv$outputDf <- data.frame(
+    rv$solutionDf <- data.frame(
       item = rv$data$item[-(1:4)],
-      servings = rv$lpSolution$solution
+      servings = round(rv$lpSolution$solution,1)
     )
+    
+    rv$solutionNutrDf <- data.frame(
+      category = names(rv$data)[-(1:5)]
+    ) %>%
+    mutate(val = map_dbl(category, getNutrTotal, rv$data, rv$solutionDf$servings))
     
   })
   

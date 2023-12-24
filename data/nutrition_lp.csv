@@ -1,10 +1,10 @@
-﻿item,min,max,in_integer_amounts,serving_size,calories,total_fat,sat_fat,trans_fat,punsat_fat,munsat_fat,chol,sodium,total_carb,total_fiber,sol_fib,unsol_fib,sugar,added_sugar,protein,potassium,magnesium,calcium,chloride,zinc,iron
-constraint1,,,,,2400,200,,,,,,2300,400,35,,,,,180,,,,,,
-direction1,,,,,<=,<=,,,,,,<=,<=,>=,,,,,>=,,,,,,
+item,min,max,in_integer_amounts,serving_size,calories,total_fat,sat_fat,trans_fat,punsat_fat,munsat_fat,chol,sodium,total_carb,total_fiber,sol_fib,unsol_fib,sugar,added_sugar,protein,potassium,magnesium,calcium,chloride,zinc,iron
+constraint1,,,,,2400,200,,,,,,2300,400,50,,,,,180,4700,,,,,
+direction1,,,,,<=,<=,,,,,,<=,<=,>=,,,,,>=,>=,,,,,
 constraint2,,,,,,,,,,,,,,,,,,,300,,,,,,
 direction2,,,,,,,,,,,,,,,,,,,<=,,,,,,
 Grape Nuts,0,2,0,58,200,1,0,0,0.5,0,0,280,47,7,1,6,5,0,6,260,42,20,,,
-Kind Breakfast Protein Bars - Dark Chocolate Cocoa,0,1,0,50,210,8,1.5,0,1.5,5,0,75,28,3,1.5,1.5,10,9,8,140,,,,,
+Kind Breakfast Protein Bars - Dark Chocolate Cocoa,1,1,0,50,210,8,1.5,0,1.5,5,0,75,28,3,1.5,1.5,10,9,8,140,,,,,
 Protein Shake,0,1,1,1,170,3,1,0,1,1,30,300,,3,,,1.5,0,30,300,,,,0,4
 Chipolte Chicken,0,1,1,1,377,14,3,0,0,0,69,65,44,1,,,0,0,20,127,,,,,
 Chili,0,1,1,1,290,10,3,,,,43,200,25,5,,,10,0,26,374,,,,,
@@ -26,4 +26,5 @@ Dave’s Killer Bread,0,2,1,1 slice,110,1.5,0,0,1,0,0,170,22,5,,,5,5,5,100,,0,,,
 Just Bare Lightly Breaded Chicken Strips,0,2,0,84 g,160,6,1,0,3,1.5,50,540,9,0,0,0,2,1,16,300,,10,,,
 Broccoli,0,5,0,85 g,25,0,0,0,0,0,0,25,4,3,,,1,0,3,282,,52,,,0.7
 Spinach,0,5,0,85 g,20,0,0,0,0,0,0,65,3,2,,,0,0,2,474,,84,,,2
+Banana,0,2,1,1,105,0.4,0.1,0,,,0,1,27,3.1,,,14,0,1.3,422,,,,,
 Pure Protein Bar,0,1,1,1 bar,200,7,3,0,,,10,200,17,1,,,2,1,20,150,,110,,,0.7

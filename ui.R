@@ -11,12 +11,14 @@ ui <- shiny::fluidPage(
       actionButton("replacevalues", label = 'Replace values'),
       actionButton("removecolumn", "Remove Column"),
       actionButton("Undo", 'Undo'),
-      actionButton('runLp', 'Run LP')
+      actionButton('runLp', 'Run LP'),
     ),
      mainPanel(
       DTOutput("tableInputs"),
-      DTOutput("tableSolution"),
-      
+      fluidRow(
+        column(6, DTOutput("tableSolution")),
+        column(6, DTOutput("tableSolutionNutrition")),
+      )
     )
   )
 )
